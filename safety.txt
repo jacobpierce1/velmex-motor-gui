@@ -1,0 +1,140 @@
+// Author: Ilka Antcheva   1/12/2006
+
+// This macro gives an example for changing text button labels anytime
+// the Start or Pause buttons are clicked.
+// To run it do either:
+// .x buttonChangelabel.C
+// .x buttonChangelabel.C++
+
+#include <TGClient.h>
+#include <TGButton.h>
+#include <TGFrame.h>
+#include <string>
+
+class MyMainFrame : public TGMainFrame {
+
+private:
+  TGVerticalFrame *controls;
+  TGHorizontalFrame *contents;
+  TGLabel *fLabelx, *fLabelY;
+  TGTextButton     *fAbsmoveButton, *fRelmoveButton;
+  TGNumberEntry *fEntryX, *fEntryY;
+
+public:
+   MyMainFrame(const TGWindow *p, UInt_t w, UInt_t h);
+   virtual ~MyMainFrame();
+   // slots
+   void Absmove();
+   void Relmove();
+  void MoveTo00();
+  void RasterX();
+  void RasterY();
+   ClassDef(MyMainFrame, 0)
+};
+
+// PRINT ///////////////////////////////////////////
+void MyMainFrame::Absmove()
+{
+  puts("performing absmove");
+  int x =  fEntryX->GetNumberEntry()->GetIntNumber();
+  printf("%d", x);
+  puts("why not print");
+}
+
+void MyMainFrame::Relmove()
+{
+  puts("performing relmove");
+}
+
+void MyMainFrame::MoveTo00()
+{
+  puts("moving to (0,0)");
+}
+
+void MyMainFrame::RasterX()
+{
+  puts("rasterX");
+}
+
+void MyMainFrame::RasterY()
+{
+  puts("RasterY");
+}
+
+
+
+MyMainFrame::MyMainFrame(const TGWindow *p, UInt_t w, UInt_t h) :
+  TGMainFrame(p, w, h)
+{
+   // Contents on right
+   TGHorizontalFrame *contents = new TGHorizontalFrame(this);
+   AddFrame(contents, new TGLayoutHints(kLHintsExpandX | kLHintsExpandY,5,5));
+
+   // Controls on left
+   TGVerticalFrame *controls = new TGVerticalFrame(this);
+   AddFrame(controls, new TGLayoutHints(kLHintsLeft | kLHintsTop,
+                                        5, 300, 5, 150));
+   //text entry
+   fLabelX = new TGLabel(controls, "Enter x:");
+   controls->AddFrame(fLabelX, new TGLayoutHints(kLHintsLeft, 5,5,5,5));
+   fEntryX = new TGNumberEntry(controls);
+   controls->AddFrame(fEntryX, new TGLayoutHints(kLHintsExpandX, 5,5,5,5));
+
+   fLabelY = new TGLabel(controls, "Enter y:");
+   controls->AddFrame(fLabelY, new TGLayoutHints(kLHintsLeft, 5,5,5,5));
+   fEntryY = new TGNumberEntry(controls);
+   controls->AddFrame(fEntryY, new TGLayoutHints(kLHintsExpandX, 5,5,5,5));
+
+   //abs move
+   fAbsmoveButton = new TGTextButton(controls, "Absolute move");
+   fAbsmoveButton->Connect("Clicked()", "MyMainFrame", this, "Absmove()");
+   controls->AddFrame(fAbsmoveButton, new TGLayoutHints(kLHintsExpandX,
+						       5,5,5,5));
+   // rel move
+   fRelmoveButton = new TGTextButton(controls, "Relative move");
+   fRelmoveButton->Connect("Clicked()", "MyMainFrame", this, "Relmove()");
+   controls->AddFrame(fRelmoveButton, new TGLayoutHints( kLHintsExpandX,
+						       5,5,5,5));
+   // rel move
+   f00Button = new TGTextButton(controls, "Go to (0,0)");
+   f00Button->Connect("Clicked()", "MyMainFrame", this, "MoveTo00()");
+   controls->AddFrame(f00Button, new TGLayoutHints( kLHintsExpandX,
+						       5,5,5,5));
+   // raster x
+   fRasterXButton = new TGTextButton(controls, "Raster X");
+   fRasterXButton->Connect("Clicked()", "MyMainFrame", this, "RasterX()");
+   controls->AddFrame(fRasterXButton, new TGLayoutHints( kLHintsExpandX,
+						       5,5,5,5));
+   // rel move
+   fRasterYButton = new TGTextButton(controls, "Raster Y");
+   fRasterYButton->Connect("Clicked()", "MyMainFrame", this, "RasterX()");
+   controls->AddFrame(fRasterYButton, new TGLayoutHints( kLHintsExpandX,
+						       5,5,5,5));
+   // exit
+   fExit = new TGTextButton(controls, "Exit", "gApplication->Terminate(0)");
+   controls->AddFrame(fExit, new TGLayoutHints(kLHintsBottom | kLHintsLeft |
+                                            kLHintsExpandX, 4, 4, 4, 4));
+
+   SetWindowName("Motor Controller GUI");
+
+   MapSubwindows();
+   Resize(GetDefaultSize());
+   MapWindow();
+}
+
+
+MyMainFrame::~MyMainFrame()
+{
+   // Clean up all widgets, frames and layouthints that were used
+   controls->Cleanup();
+   contents->Cleanup();
+   Cleanup();
+}
+
+
+void gui2()
+{
+   // Popup the GUI...
+   new MyMainFrame(gClient->GetRoot(), 350, 80);
+}
+

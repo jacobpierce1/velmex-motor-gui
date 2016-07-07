@@ -1,0 +1,26 @@
+create canvas:
+{
+   Double_t w = 600;
+   Double_t h = 600;
+   TCanvas * c1 = new TCanvas("c", "c", w, h);
+   c->SetWindowSize(w + (w - c->GetWw()), h + (h - c->GetWh()));
+}
+
+
+create new gui builder:
+new TGuiBuilder
+
+
+
+
+
+
+
+gSystem->Load("/usr/local/lib/libserialport.so")
+.x motor_gui.cpp
+
+
+
+x,y: fTextEntry681
+speed: "" 682
+raster space: "" 683
